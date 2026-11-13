@@ -1,0 +1,15 @@
+# Local workspaces
+.worktrees/
+
+# Dependencies and generated output
+node_modules/
+dist/
+
+# Local environment files
+.env
+.env.*
+!.env.example
+
+# Test artefacts
+playwright-report/
+test-results/
