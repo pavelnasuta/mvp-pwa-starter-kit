@@ -33,6 +33,29 @@ function useAppliedTheme() {
   }, [theme])
 }
 
+function OfflineStatus() {
+  const [isOnline, setIsOnline] = useState(() => navigator.onLine)
+
+  useEffect(() => {
+    const updateStatus = () => setIsOnline(navigator.onLine)
+
+    window.addEventListener('online', updateStatus)
+    window.addEventListener('offline', updateStatus)
+    return () => {
+      window.removeEventListener('online', updateStatus)
+      window.removeEventListener('offline', updateStatus)
+    }
+  }, [])
+
+  if (isOnline) return null
+
+  return (
+    <p className="border-b border-amber-500/40 bg-amber-500/10 px-4 py-2 text-center text-sm text-foreground" role="status" aria-label="Подключение к интернету">
+      Нет подключения к интернету. Данные доступны на этом устройстве.
+    </p>
+  )
+}
+
 function HomePage() {
   return (
     <section className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
@@ -66,5 +89,5 @@ export function App() {
 
   const page = activeRoute === 'gallery' ? <GalleryPage /> : activeRoute === 'ideas' ? <IdeasPage /> : <HomePage />
 
-  return <><AppShell activeRoute={activeRoute} onNavigate={navigate}>{page}</AppShell><Toaster richColors position="top-center" closeButton /></>
+  return <><OfflineStatus /><AppShell activeRoute={activeRoute} onNavigate={navigate}>{page}</AppShell><Toaster richColors position="top-center" closeButton /></>
 }

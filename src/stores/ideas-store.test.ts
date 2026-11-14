@@ -137,6 +137,7 @@ describe('useIdeasStore', () => {
     })
 
     const created = useIdeasStore.getState().create(draft)
+    useIdeasStore.getState().hydrate()
 
     expect(useIdeasStore.getState().ideas).toEqual([created])
     expect(useIdeasStore.getState().storageStatus).toBe('unsaved')
@@ -160,6 +161,8 @@ describe('useIdeasStore', () => {
     try {
       const { useIdeasStore: importedStore } = await import('./ideas-store')
       const created = importedStore.getState().create(draft)
+
+      importedStore.getState().hydrate()
 
       expect(importedStore.getState().ideas).toEqual([created])
       expect(importedStore.getState().storageStatus).toBe('unsaved')

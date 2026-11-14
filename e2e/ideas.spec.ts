@@ -30,3 +30,19 @@ test('does not overflow horizontally on desktop Ideas page', async ({ page }) =>
 
   expect(scrollWidth).toBeLessThanOrEqual(clientWidth)
 })
+
+test('keeps saved Ideas and discloses offline state after a production-subpath reload', async ({ context, page }) => {
+  await page.goto('/starter-kit/')
+  await page.getByRole('link', { name: 'Идеи' }).click()
+  await page.getByRole('button', { name: 'Новая идея' }).click()
+  await page.getByLabel('Название').fill('Идея для офлайн-проверки')
+  await page.getByRole('button', { name: 'Сохранить' }).click()
+  await expect(page.getByText('Идея для офлайн-проверки')).toBeVisible()
+
+  await page.waitForFunction(() => navigator.serviceWorker.controller !== null)
+  await context.setOffline(true)
+  await page.reload()
+
+  await expect(page.getByText('Идея для офлайн-проверки')).toBeVisible()
+  await expect(page.getByRole('status', { name: 'Подключение к интернету' })).toHaveText('Нет подключения к интернету. Данные доступны на этом устройстве.')
+})

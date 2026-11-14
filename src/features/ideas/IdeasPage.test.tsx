@@ -1,4 +1,4 @@
-import { cleanup, render, screen, within } from '@testing-library/react'
+import { act, cleanup, render, screen, within } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
 import { Toaster } from 'sonner'
 import { afterEach, beforeEach, expect, it } from 'vitest'
@@ -189,4 +189,16 @@ it('normalizes tags entered in the form', async () => {
   const tags = screen.getByLabelText('Теги')
   expect(within(tags).getAllByText('исследование')).toHaveLength(1)
   expect(within(tags).getByText('pwa')).toBeInTheDocument()
+})
+
+it.each([
+  ['unsaved', 'Изменения сохранены только в памяти: хранилище браузера недоступно.'],
+  ['recovered', 'Повреждённые локальные данные были пропущены. Новые изменения можно сохранить.'],
+] as const)('quietly discloses the %s storage state', (storageStatus, message) => {
+  renderIdeasPage()
+  act(() => {
+    useIdeasStore.setState({ storageStatus })
+  })
+
+  expect(screen.getByRole('status', { name: 'Состояние хранения' })).toHaveTextContent(message)
 })

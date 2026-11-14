@@ -20,6 +20,11 @@ const filterLabels: Record<'all' | IdeaStatus, string> = {
   done: 'Готово',
 }
 
+const storageMessages = {
+  unsaved: 'Изменения сохранены только в памяти: хранилище браузера недоступно.',
+  recovered: 'Повреждённые локальные данные были пропущены. Новые изменения можно сохранить.',
+} as const
+
 function matchesQuery(idea: Idea, query: string) {
   if (!query) return true
 
@@ -29,6 +34,7 @@ function matchesQuery(idea: Idea, query: string) {
 
 export function IdeasPage() {
   const ideas = useIdeasStore((state) => state.ideas)
+  const storageStatus = useIdeasStore((state) => state.storageStatus)
   const create = useIdeasStore((state) => state.create)
   const update = useIdeasStore((state) => state.update)
   const remove = useIdeasStore((state) => state.remove)
@@ -109,6 +115,12 @@ export function IdeasPage() {
         </div>
         <Button type="button" onClick={() => { setEditingIdea(undefined); setIsFormOpen(true) }}><Plus className="h-4 w-4" aria-hidden="true" />Новая идея</Button>
       </div>
+
+      {storageStatus !== 'ready' && (
+        <p className="rounded-md border border-amber-500/40 bg-amber-500/10 px-3 py-2 text-sm text-foreground" role="status" aria-label="Состояние хранения">
+          {storageMessages[storageStatus]}
+        </p>
+      )}
 
       <div className="grid gap-3 rounded-lg border bg-card p-4 sm:grid-cols-[1fr_13rem]">
         <div className="grid gap-2">

@@ -105,6 +105,15 @@ export const useIdeasStore = create<IdeasState>((set, get) => ({
   },
 
   hydrate: () => {
+    if (get().storageStatus === 'unsaved') {
+      return
+    }
+
+    if (!storage.available()) {
+      set({ storageStatus: 'unsaved' })
+      return
+    }
+
     const serialized = storage.getItem(STORAGE_KEY)
 
     if (serialized === null) {
