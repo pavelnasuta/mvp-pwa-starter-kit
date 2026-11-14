@@ -11,10 +11,22 @@ test('creates an idea that remains after a page reload', async ({ page }) => {
   await expect(page.getByText('Прототип без бэкенда')).toBeVisible()
 })
 
+test('detects desktop client-area overflow that a fixed 1440 threshold accepts', () => {
+  const measurement = { scrollWidth: 1440, clientWidth: 1425 }
+
+  expect(measurement.scrollWidth).toBeLessThanOrEqual(1440)
+  expect(measurement.scrollWidth).toBeGreaterThan(measurement.clientWidth)
+})
+
 test('does not overflow horizontally on desktop Ideas page', async ({ page }) => {
   await page.setViewportSize({ width: 1440, height: 900 })
   await page.goto('/starter-kit/')
   await page.getByRole('link', { name: 'Идеи' }).click()
 
-  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(1440)
+  const { scrollWidth, clientWidth } = await page.evaluate(() => ({
+    scrollWidth: document.documentElement.scrollWidth,
+    clientWidth: document.documentElement.clientWidth,
+  }))
+
+  expect(scrollWidth).toBeLessThanOrEqual(clientWidth)
 })
