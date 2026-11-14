@@ -134,7 +134,7 @@ export function IdeasPage() {
       <div className="flex flex-col gap-3 border-t pt-6 sm:flex-row sm:flex-wrap">
         <Button type="button" variant="outline" onClick={exportIdeas}><Download className="h-4 w-4" aria-hidden="true" />Экспортировать JSON</Button>
         <Button type="button" variant="outline" onClick={() => importInputRef.current?.click()}><Upload className="h-4 w-4" aria-hidden="true" />Импортировать JSON</Button>
-        <Input ref={importInputRef} className="sr-only" type="file" accept=".json,application/json" aria-label="Импортировать JSON" onChange={importIdeas} />
+        <input ref={importInputRef} className="sr-only" type="file" accept=".json,application/json" aria-label="Импортировать JSON" onChange={importIdeas} />
         <Button type="button" variant="destructive" onClick={() => setIsResetOpen(true)}><RotateCcw className="h-4 w-4" aria-hidden="true" />Сбросить данные</Button>
       </div>
 

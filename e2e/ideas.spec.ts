@@ -10,3 +10,11 @@ test('creates an idea that remains after a page reload', async ({ page }) => {
   await page.reload()
   await expect(page.getByText('Прототип без бэкенда')).toBeVisible()
 })
+
+test('does not overflow horizontally on desktop Ideas page', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 })
+  await page.goto('/starter-kit/')
+  await page.getByRole('link', { name: 'Идеи' }).click()
+
+  expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBeLessThanOrEqual(1440)
+})

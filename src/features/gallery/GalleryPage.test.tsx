@@ -10,4 +10,5 @@ it('exposes a labelled component gallery and destructive confirmation', () => {
     screen.getByRole('heading', { name: 'Галерея компонентов' }),
   ).toBeInTheDocument()
   expect(screen.getByRole('button', { name: 'Удалить пример' })).toBeInTheDocument()
+  expect(screen.getByRole('status', { name: 'Пример загрузки' })).toBeInTheDocument()
 })

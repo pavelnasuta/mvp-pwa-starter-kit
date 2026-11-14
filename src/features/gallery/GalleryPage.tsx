@@ -138,7 +138,7 @@ export function GalleryPage() {
           <CardDescription>Сначала обозначьте ожидание, затем запросите явное подтверждение.</CardDescription>
         </CardHeader>
         <CardContent className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
-          <div className="space-y-2" aria-label="Пример загрузки"><Skeleton className="h-4 w-48" /><Skeleton className="h-4 w-32" /></div>
+          <div className="space-y-2" role="status" aria-label="Пример загрузки"><Skeleton className="h-4 w-48" /><Skeleton className="h-4 w-32" /></div>
           <AlertDialog>
             <AlertDialogTrigger asChild><Button type="button" variant="destructive">Удалить пример</Button></AlertDialogTrigger>
             <AlertDialogContent>
