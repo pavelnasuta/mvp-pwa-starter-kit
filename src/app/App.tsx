@@ -3,6 +3,7 @@ import { Toaster } from 'sonner'
 
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
 import { GalleryPage } from '../features/gallery/GalleryPage'
+import { IdeasPage } from '../features/ideas/IdeasPage'
 import { usePreferencesStore } from '../stores/preferences-store'
 import { AppShell } from './layouts/AppShell'
 import type { RouteName } from './routes'
@@ -43,21 +44,11 @@ function HomePage() {
   )
 }
 
-function IdeasPlaceholder() {
-  return (
-    <section className="space-y-3" aria-labelledby="ideas-title">
-      <p className="text-sm font-medium text-primary">Пример локальных данных</p>
-      <h1 id="ideas-title" className="text-3xl font-bold tracking-tight">Идеи</h1>
-      <Card><CardHeader><CardTitle>Скоро здесь появится список</CardTitle><CardDescription>Поведение CRUD и импорта будет добавлено отдельной задачей поверх готовой визуальной системы.</CardDescription></CardHeader></Card>
-    </section>
-  )
-}
-
 export function App() {
   const [activeRoute, setActiveRoute] = useState<RouteName>('home')
   useAppliedTheme()
 
-  const page = activeRoute === 'gallery' ? <GalleryPage /> : activeRoute === 'ideas' ? <IdeasPlaceholder /> : <HomePage />
+  const page = activeRoute === 'gallery' ? <GalleryPage /> : activeRoute === 'ideas' ? <IdeasPage /> : <HomePage />
 
   return <><AppShell activeRoute={activeRoute} onNavigate={setActiveRoute}>{page}</AppShell><Toaster richColors position="top-center" closeButton /></>
 }
