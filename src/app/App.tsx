@@ -1,8 +1,63 @@
-export function App() {
+import { useEffect, useState } from 'react'
+import { Toaster } from 'sonner'
+
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card'
+import { GalleryPage } from '../features/gallery/GalleryPage'
+import { usePreferencesStore } from '../stores/preferences-store'
+import { AppShell } from './layouts/AppShell'
+import type { RouteName } from './routes'
+
+function useAppliedTheme() {
+  const theme = usePreferencesStore((state) => state.theme)
+
+  useEffect(() => {
+    const media = window.matchMedia?.('(prefers-color-scheme: dark)')
+    const applyTheme = () => {
+      const isDark = theme === 'dark' || (theme === 'system' && media?.matches)
+      document.documentElement.classList.toggle('dark', Boolean(isDark))
+      document.documentElement.dataset.theme = theme
+      document.querySelector('meta[name="theme-color"]')?.setAttribute('content', isDark ? '#0f172a' : '#f8fafc')
+    }
+
+    applyTheme()
+    if (theme !== 'system' || !media) return undefined
+
+    media.addEventListener?.('change', applyTheme)
+    return () => media.removeEventListener?.('change', applyTheme)
+  }, [theme])
+}
+
+function HomePage() {
   return (
-    <main>
-      <h1>MVP PWA Starter</h1>
-      <p>Базовая инфраструктура приложения готова.</p>
-    </main>
+    <section className="grid gap-6 lg:grid-cols-[1.2fr_0.8fr] lg:items-center">
+      <div className="space-y-4">
+        <p className="text-sm font-medium text-primary">Стартовая основа</p>
+        <h1 className="text-3xl font-bold tracking-tight sm:text-4xl">Собирайте проверяемые MVP быстрее.</h1>
+        <p className="max-w-xl text-base leading-7 text-muted-foreground">Мобильная оболочка, локальное хранение и доступные компоненты уже готовы к следующему продуктному экрану.</p>
+      </div>
+      <Card>
+        <CardHeader><CardTitle>Что уже есть</CardTitle><CardDescription>Без сервера, ключей и внешнего трекинга.</CardDescription></CardHeader>
+        <CardContent><ul className="space-y-2 text-sm text-muted-foreground"><li>• Светлая, тёмная и системная темы</li><li>• Адаптивная клавиатурная навигация</li><li>• Компоненты для форм, диалогов и статусов</li></ul></CardContent>
+      </Card>
+    </section>
   )
+}
+
+function IdeasPlaceholder() {
+  return (
+    <section className="space-y-3" aria-labelledby="ideas-title">
+      <p className="text-sm font-medium text-primary">Пример локальных данных</p>
+      <h1 id="ideas-title" className="text-3xl font-bold tracking-tight">Идеи</h1>
+      <Card><CardHeader><CardTitle>Скоро здесь появится список</CardTitle><CardDescription>Поведение CRUD и импорта будет добавлено отдельной задачей поверх готовой визуальной системы.</CardDescription></CardHeader></Card>
+    </section>
+  )
+}
+
+export function App() {
+  const [activeRoute, setActiveRoute] = useState<RouteName>('home')
+  useAppliedTheme()
+
+  const page = activeRoute === 'gallery' ? <GalleryPage /> : activeRoute === 'ideas' ? <IdeasPlaceholder /> : <HomePage />
+
+  return <><AppShell activeRoute={activeRoute} onNavigate={setActiveRoute}>{page}</AppShell><Toaster richColors position="top-center" closeButton /></>
 }
