@@ -26,10 +26,19 @@ const unavailableStorage: SafeStorage = {
   available: () => false,
 }
 
-const storage =
-  typeof window === 'undefined'
-    ? unavailableStorage
-    : createSafeStorage(window.localStorage)
+function getStorage(): SafeStorage {
+  if (typeof window === 'undefined') {
+    return unavailableStorage
+  }
+
+  try {
+    return createSafeStorage(window.localStorage)
+  } catch {
+    return unavailableStorage
+  }
+}
+
+const storage = getStorage()
 
 function trimDraft(draft: IdeaDraft): IdeaDraft {
   return {

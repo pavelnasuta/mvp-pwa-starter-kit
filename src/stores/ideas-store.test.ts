@@ -141,4 +141,35 @@ describe('useIdeasStore', () => {
     expect(useIdeasStore.getState().ideas).toEqual([created])
     expect(useIdeasStore.getState().storageStatus).toBe('unsaved')
   })
+
+  it('keeps the store usable when localStorage access throws at import time', async () => {
+    const hadOwnLocalStorage = Object.hasOwn(window, 'localStorage')
+    const originalLocalStorage = Object.getOwnPropertyDescriptor(
+      window,
+      'localStorage',
+    )
+
+    Object.defineProperty(window, 'localStorage', {
+      configurable: true,
+      get: () => {
+        throw new DOMException('blocked', 'SecurityError')
+      },
+    })
+    vi.resetModules()
+
+    try {
+      const { useIdeasStore: importedStore } = await import('./ideas-store')
+      const created = importedStore.getState().create(draft)
+
+      expect(importedStore.getState().ideas).toEqual([created])
+      expect(importedStore.getState().storageStatus).toBe('unsaved')
+    } finally {
+      if (hadOwnLocalStorage && originalLocalStorage) {
+        Object.defineProperty(window, 'localStorage', originalLocalStorage)
+      } else {
+        delete (window as { localStorage?: Storage }).localStorage
+      }
+      vi.resetModules()
+    }
+  })
 })
