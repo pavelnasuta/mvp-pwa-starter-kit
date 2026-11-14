@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-labelledby="title">
+  <title>Геометрическая искра на сетке</title>
+  <rect width="512" height="512" rx="112" fill="#111827"/>
+  <g fill="#475569">
+    <rect x="175" y="175" width="42" height="42" rx="10"/>
+    <rect x="235" y="175" width="42" height="42" rx="10"/>
+    <rect x="295" y="175" width="42" height="42" rx="10"/>
+    <rect x="175" y="235" width="42" height="42" rx="10"/>
+    <rect x="295" y="235" width="42" height="42" rx="10"/>
+    <rect x="175" y="295" width="42" height="42" rx="10"/>
+    <rect x="235" y="295" width="42" height="42" rx="10"/>
+    <rect x="295" y="295" width="42" height="42" rx="10"/>
+  </g>
+  <path d="M256 205l13 38 38 13-38 13-13 38-13-38-38-13 38-13z" fill="#f8fafc"/>
+  <circle cx="256" cy="256" r="8" fill="#111827"/>
+</svg>

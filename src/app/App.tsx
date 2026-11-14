@@ -6,7 +6,12 @@ import { GalleryPage } from '../features/gallery/GalleryPage'
 import { IdeasPage } from '../features/ideas/IdeasPage'
 import { usePreferencesStore } from '../stores/preferences-store'
 import { AppShell } from './layouts/AppShell'
-import type { RouteName } from './routes'
+import { appRoutes, type RouteName } from './routes'
+
+function routeFromHash(): RouteName {
+  const route = window.location.hash.slice(1)
+  return appRoutes.find((candidate) => candidate.name === route)?.name ?? 'home'
+}
 
 function useAppliedTheme() {
   const theme = usePreferencesStore((state) => state.theme)
@@ -45,10 +50,21 @@ function HomePage() {
 }
 
 export function App() {
-  const [activeRoute, setActiveRoute] = useState<RouteName>('home')
+  const [activeRoute, setActiveRoute] = useState<RouteName>(routeFromHash)
   useAppliedTheme()
+
+  useEffect(() => {
+    const syncRoute = () => setActiveRoute(routeFromHash())
+    window.addEventListener('hashchange', syncRoute)
+    return () => window.removeEventListener('hashchange', syncRoute)
+  }, [])
+
+  const navigate = (route: RouteName) => {
+    window.location.hash = route
+    setActiveRoute(route)
+  }
 
   const page = activeRoute === 'gallery' ? <GalleryPage /> : activeRoute === 'ideas' ? <IdeasPage /> : <HomePage />
 
-  return <><AppShell activeRoute={activeRoute} onNavigate={setActiveRoute}>{page}</AppShell><Toaster richColors position="top-center" closeButton /></>
+  return <><AppShell activeRoute={activeRoute} onNavigate={navigate}>{page}</AppShell><Toaster richColors position="top-center" closeButton /></>
 }

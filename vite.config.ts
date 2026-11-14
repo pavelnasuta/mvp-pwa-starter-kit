@@ -13,6 +13,15 @@ export default defineConfig({
     react(),
     VitePWA({
       registerType: 'autoUpdate',
+      includeAssets: [
+        'favicon.ico',
+        'icons/icon.svg',
+        'icons/icon-32.png',
+        'icons/icon-180.png',
+        'icons/icon-192.png',
+        'icons/icon-512.png',
+        'icons/icon-maskable-512.png',
+      ],
       manifest: {
         name: 'MVP PWA Starter',
         short_name: 'MVP Starter',
