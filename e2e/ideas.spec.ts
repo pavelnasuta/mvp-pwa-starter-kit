@@ -46,3 +46,21 @@ test('keeps saved Ideas and discloses offline state after a production-subpath r
   await expect(page.getByText('Идея для офлайн-проверки')).toBeVisible()
   await expect(page.getByRole('status', { name: 'Подключение к интернету' })).toHaveText('Нет подключения к интернету. Данные доступны на этом устройстве.')
 })
+
+test('shows iPad installation guidance for a desktop-style Safari user agent', async ({ browser }) => {
+  const context = await browser.newContext({
+    userAgent: 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/605.1.15 Version/17.0 Safari/605.1.15',
+    viewport: { width: 390, height: 844 },
+  })
+  await context.addInitScript(() => {
+    Object.defineProperty(navigator, 'platform', { configurable: true, value: 'MacIntel' })
+    Object.defineProperty(navigator, 'maxTouchPoints', { configurable: true, value: 5 })
+  })
+  const page = await context.newPage()
+
+  await page.goto('/starter-kit/')
+
+  await expect(page.getByRole('status', { name: 'Установка приложения' })).toContainText('Поделиться')
+  await expect(page.getByRole('button', { name: 'Установить' })).toHaveCount(0)
+  await context.close()
+})
